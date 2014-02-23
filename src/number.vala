@@ -934,7 +934,7 @@ public class Number
         var z = new Number.integer (1);
         while (n != 0)
         {
-            if (n&1 == 1)
+            if ((n&1) == 1)
                 z = z.multiply (t);
             t = t.multiply (t);
             n>>=1;
