@@ -30,7 +30,7 @@
 /* Size of the multiple precision values */
 private const int SIZE = 1000;
 
-/* Base for numbers */
+/* Base for  public Number xpowy (Number y) public Number xpowy (Number y)numbers */
 private const int BASE = 10000;
 
 //2E0 BELOW ENSURES AT LEAST ONE GUARD DIGIT
@@ -934,10 +934,10 @@ public class Number
         var z = new Number.integer (1);
         while (n != 0)
         {
-            if (n % 2 == 1)
+            if (n&1 == 1)
                 z = z.multiply (t);
             t = t.multiply (t);
-            n = n / 2;
+            n>>=1;
         }
         return z;
     }
