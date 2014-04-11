@@ -3,7 +3,7 @@ noinst_PROGRAMS = test-number test-equation test-serializer
 
 TESTS = test-number test-equation test-serializer
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-DUI_DIR=\""$(datadir)/gnome-calculator"\" \
 	-DVERSION=\""$(VERSION)"\" \
 	-DLOCALE_DIR=\""$(localedir)"\" \
@@ -134,5 +134,4 @@ test_serializer_LDADD = \
 	$(GCALCCMD_LIBS) \
 	-lm
 
-DISTCLEANFILES = \
-	Makefile.in
+-include $(top_srcdir)/git.mk

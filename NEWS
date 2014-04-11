@@ -1,3 +1,24 @@
+Overview of changes in gnome-calculator 3.12.0
+    * Update : Translations (Translation team)
+
+Overview of changes in gnome-calculator 3.11.92
+    * Update : Translations (Translation team)
+    * Fix : Lost text focus on click (Simen Heggestøyl)
+
+Overview of changes in gnome-calculator 3.11.91
+    * New : Use git.mk (Michael Catanzaro)
+    * Update : Rename desktop file (Michael Catanzaro)
+    * Update : Translations (Translation team)
+    * Fix : Makefile (Michael Catanzaro)
+    * Fix : Precision loss (Daniel Renninghoff)
+    * Fix : 0^0 should be indeterminate (Elita Lobo)
+    * Fix : Precision error for ln () calculations (Daniel Renninghoff)
+
+Overview of changes in gnome-calculator 3.11.90
+    * Update : Translations (Translation team)
+    * Fix : Window specific mode and actions (Michael Catanzaro)
+    * Fix : About dialog (Michael Catanzaro)
+
 Overview of changes in gnome-calculator 3.11.5
     * Update : Translations (Translation team)
     * Update : Documentation (PioneerAxon, Baptiste Mille-Mathias)

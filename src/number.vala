@@ -30,7 +30,7 @@
 /* Size of the multiple precision values */
 private const int SIZE = 1000;
 
-/* Base for  public Number xpowy (Number y) public Number xpowy (Number y)numbers */
+/* Base for numbers */
 private const int BASE = 10000;
 
 //2E0 BELOW ENSURES AT LEAST ONE GUARD DIGIT
@@ -910,6 +910,14 @@ public class Number
             return new Number.integer (0);
         }
 
+        /* 0^0 is indeterminate */
+        if (is_zero () && n == 0)
+        {
+            /* Translators: Error displayed when attempted to raise 0 to power of zero */
+            mperr (_("Zero raised to zero is undefined"));
+            return new Number.integer (0);
+        }
+
         /* x^0 = 1 */
         if (n == 0)
             return new Number.integer (1);
@@ -934,10 +942,10 @@ public class Number
         var z = new Number.integer (1);
         while (n != 0)
         {
-            if ((n&1) == 1)
+            if (n % 2 == 1)
                 z = z.multiply (t);
             t = t.multiply (t);
-            n>>=1;
+            n = n / 2;
         }
         return z;
     }
@@ -2078,6 +2086,10 @@ public class Number
 
     private Number ln_real ()
     {
+        // ln(e^1) = 1, fixes precision loss
+        if (equals (new Number.eulers ()))
+            return new Number.integer (1);
+
         /* LOOP TO GET APPROXIMATE Ln (X) USING SINGLE-PRECISION */
         var t1 = copy ();
         var z = new Number.integer (0);
@@ -2091,10 +2103,10 @@ public class Number
             /* REMOVE EXPONENT TO AVOID FLOATING-POINT OVERFLOW */
             var e = t1.re_exponent;
             t1.re_exponent = 0;
-            var rx = t1.to_float_old ();
+            var rx = t1.to_double ();
             t1.re_exponent = e;
-            var rlx = (float) (Math.log (rx) + e * Math.log (BASE));
-            t2 = new Number.float (-(float)rlx);
+            var rlx = Math.log (rx) + e * Math.log (BASE);
+            t2 = new Number.double (-rlx);
 
             /* UPDATE Z AND COMPUTE ACCURATE EXP OF APPROXIMATE LOG */
             z = z.subtract (t2);
@@ -2106,59 +2118,6 @@ public class Number
 
         mperr ("*** ERROR IN LN, ITERATION NOT CONVERGING ***");
         return z;
-    }
-
-    // FIXME: This is here becase ln e breaks if we use the symmetric to_float
-    private float to_float_old ()
-    {
-        if (is_zero ())
-            return 0f;
-
-        var z = 0f;
-        var i = 0;
-        for (; i < T; i++)
-        {
-            z = BASE * z + re_fraction[i];
-
-            /* CHECK IF FULL SINGLE-PRECISION ACCURACY ATTAINED */
-            if (z + 1.0f <= z)
-                break;
-        }
-
-        /* NOW ALLOW FOR EXPONENT */
-        z = (float) (z * mppow_ri (BASE, re_exponent - i - 1));
-
-        if (re_sign < 0)
-            return -z;
-        else
-            return z;
-    }
-
-    private double mppow_ri (float ap, int bp)
-    {
-        if (bp == 0)
-            return 1.0f;
-
-        if (bp < 0)
-        {
-            if (ap == 0)
-                return 1.0f;
-            bp = -bp;
-            ap = 1 / ap;
-        }
-
-        var pow = 1.0;
-        while (true)
-        {
-            if ((bp & 01) != 0)
-                pow *= ap;
-            if ((bp >>= 1) != 0)
-                ap *= ap;
-            else
-                break;
-        }
-
-        return pow;
     }
 
     /*  RETURNS MP Y = Ln (1+X) IF X IS AN MP NUMBER SATISFYING THE
